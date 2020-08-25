@@ -27,3 +27,8 @@ The code depends on the following libraries, but they should be handled automati
 ## Immediate TODOs
 - Check that the changes made to the code *after submission* are still able to reproduce the results matching those in the paper
 - Add the multicolor test data once that is done, single boundary vectorization was mostly untouched.
+- Add instructions for training data
+
+## Contact
+
+Feel free to reach out at edoaramis at gmail.com for questions regarding the code. 
