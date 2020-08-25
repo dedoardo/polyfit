@@ -11,7 +11,7 @@ Open the folder in Visual Studio 2017+ and build polyfit.exe in Release(WithDebI
 
 The output will be written to vectorization/curves_closed
 
-If you are interested in visualizing different stages of the algorithm, uncomment the respective lines in apps/polyfit.cpp and rebuild.
+If you are interested in visualizing different stages of the algorithm, uncomment the respective lines in `apps/polyfit.cpp` and rebuild.
 
 ## Dependencies
 The code depends on the following libraries, but they should be handled automatically through git submodule.
