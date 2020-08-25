@@ -21,7 +21,7 @@ The code depends on the following libraries, but they should be handled automati
 - [Sean Barret's stb](https://github.com/nothings/stb)
 
 ## Some of the known problems
-- Some extremely complex pixel-art inputs will fail to be segmented and thus provoke a crash. (Our implementation of the depixelize segmentation needs more debugginb) 
+- Some extremely complex pixel-art inputs will fail to be segmented and thus provoke a crash. (Our implementation of the depixelize segmentation needs more debugging) 
 - Visual Studio 2019 *might* not work, we encountered some problems with incorrect variable initialization.
 
 ## Immediate TODOs
