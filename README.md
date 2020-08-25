@@ -25,6 +25,5 @@ The code depends on the following libraries, but they should be handled automati
 - Visual Studio 2019 *might* not work, we encountered some problems with incorrect variable initialization.
 
 ## Immediate TODOs
-- Automatically verify that this is the correct version of the code and classifier used to generate the results as in the paper
+- Check that the changes made to the code *after submission* are still able to reproduce the results matching those in the paper
 - Add the multicolor test data once that is done
-
