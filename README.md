@@ -2,12 +2,12 @@
 Code for the [SIGGRAPH 2020 paper](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
 
 ## Building
-git clone --recursive https://github.com/dedoardo/polyfit 
+`git clone --recursive https://github.com/dedoardo/polyfit`
 
 Open the folder in Visual Studio 2017+ and build polyfit.exe in Release(WithDebInfo) mode, the output will be written to the cmake source directory.
 
 ## Running
-polyfit.exe "data/binary_input/pear-32/input.png" "trained/random_forest_paper.txt" vectorization
+`polyfit.exe "data/binary_input/pear-32/input.png" "trained/random_forest_paper.txt" vectorization`
 
 The output will be written to vectorization/curves_closed
 
