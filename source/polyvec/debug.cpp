@@ -340,13 +340,8 @@ namespace polyvec {
 			scene.finish_outline();
 		}
 
-		void curves_fill(const std::vector<GlobFitCurve*>& curves, const real4& _color) {
-            auto color = _color;
-            if (color(3) < PF_EPS) {
-                color = Eigen::Vector4d::Ones();
-            }
-
-            draw::scene_cur().begin_closed_shape(Style::fill(color));
+		void curves_fill(const std::vector<GlobFitCurve*>& curves, const real4& color) {
+			draw::scene_cur().begin_closed_shape(Style::fill(color));
 
 			for (size_t icurve = 0; icurve < curves.size(); ++icurve) {
 				GlobFitCurve* curve = curves[icurve];

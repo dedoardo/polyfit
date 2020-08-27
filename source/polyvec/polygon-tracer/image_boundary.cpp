@@ -235,6 +235,7 @@ int ImageBoundary::find_line_before_polygon_vertex(const int polygon_v) const {
         }
     }
 
+    PF_ABORT;
     return -1;
 }
 
@@ -249,6 +250,7 @@ int ImageBoundary::find_line_after_polygon_vertex(const int polygon_v) const {
         }
     }
 
+    PF_ABORT;
     return -1;
 }
 

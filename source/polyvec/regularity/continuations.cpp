@@ -14,8 +14,6 @@ using namespace polyfit;
 using namespace polyvec;
 using namespace Regularity;
 
-#define USE_CONTINUATION_LOGIC_2018 0
-
 // Returns true if the regularity continuation is between degenerate edges
 // These do not include the edges *after* the continuation, but only the continuation itself
 // ----------------------------------------------------------------------------
@@ -29,8 +27,15 @@ bool has_degenerate_edges(
 
 bool is_edge_accurate(const mat2x& B, const int vsrc, const int vdst)
 {
-    const vec2 psrc = B.col(vsrc);
-    const vec2 pdst = B.col(vdst);
+	/* OLD version using wykoby primitives
+		mat2 e;
+		e.col(0) = B.col(vsrc);
+		e.col(1) = B.col(vdst);
+		const vec2 d_error = PathUtils::distance_bounds_from_points(B, e, vec2i(vsrc, vdst));
+		return ErrorMetrics::accuracy_within_bounds(d_error.minCoeff(), d_error.maxCoeff(), e.col(0) - e.col(1));
+	*/
+	const vec2 psrc = B.col(vsrc);
+	const vec2 pdst = B.col(vdst);
 	const vec2 d_error = GeomRaster::distance_bounds_from_points_with_slack(B, psrc, pdst, vsrc, vdst);
 	return ErrorMetrics::accuracy_within_bounds(d_error.minCoeff(), d_error.maxCoeff(), psrc - pdst);
 }
@@ -205,119 +210,6 @@ bool move_breaks_symmetry(
 		//TODO: check if the move agrees with the symmetry axis
 	}
 	return false;
-}
-
-bool line_intersects_circle(
-    const vec2 center,
-    const double radius,
-    const vec2 p0,
-    const vec2 p1
-) {
-    double t = LineUtils::project_t(center, p0, p1);
-    if (t < -PF_EPS) {
-        t = 0.;
-    }
-    else if (t > 1. + PF_EPS) {
-        t = 1.;
-    }
-
-    const vec2 p = Num::lerp(p0, p1, t);
-    return (p - center).norm() < radius;
-}
-
-bool is_continuation_valid_2018 (
-    const mat2x& P,
-    const vecXi& V,
-    Continuation& r,
-    const bool circular,
-    double resolution_scaling_factor,
-    const RegularityInformation& reg
-) {
-    compute_distance_metrics(P, V, r, circular);
-    compute_curvature_metrics(P, V, r, circular);
-
-    if (has_degenerate_edges(P, V, r)) {
-        return false;
-    }
-
-    if (r.move_v0 != 0)
-    {
-        if (move_breaks_symmetry(r.v0, r.move_v0, r.v1, r.move_v1, reg))
-            return false;
-    }
-
-    if (r.move_v1 != 0)
-    {
-        if (move_breaks_symmetry(r.v1, r.move_v1, r.v0, r.move_v0, reg))
-            return false;
-    }
-
-    if (std::min(r.angle_separation_0, r.angle_separation_1) < Options::get()->regularity_continuation_angle_separation_max - PF_EPS) {
-        PF_VERBOSE_F("Fails angle separation");
-        return false;
-    }
-
-    // Testing the continuation angle difference
-    if (r.angle_continuation_difference_0 < -PF_RAD(5) || r.angle_continuation_difference_1 < -PF_RAD(5)) {
-        PF_VERBOSE_F("Fails continuation difference");
-        return false;
-    }
-
-    // Testing the intersection angle
-    if (r.intersection_angle < PF_RAD(120)) {
-        PF_VERBOSE_F("Fails intersection separation");
-        return false;
-    }
-
-    const int i = r.v0;
-    const int j = r.v1;
-    const vec2 pi = P.col(i);
-    const vec2 pj = P.col(j);
-    const vec2 pi_prev = CircularAt(P, r.v0_prev);
-    const vec2 pj_next = CircularAt(P, r.v1_next);
-    if (AngleUtils::have_opposite_convexity(pi_prev, pi, pj, pj_next)) {
-        const double angle_i = M_PI - AngleUtils::spanned_shortest(pi_prev, pi, pj);
-        const double angle_j = M_PI - AngleUtils::spanned_shortest(pj_next, pj, pi);
-
-        if (angle_i + angle_j > PF_RAD(50)) {
-            return false;
-        }
-    }
-
-    // I need to fill in 
-    // angle_continuation_0/1
-    // intersection_angle
-    // distance_midpoints_sq
-    bool is_valid_continuation = true;
-
-    // TEST 1: Are a bunch of points around i j?
-    const auto center = .5 * (pi + pj);
-    const auto radius = .5 * (pi - pj).norm() * .9;
-    for (int i = 0; i < V.size(); ++i) {
-        const vec2 p0 = P.col(i);
-        const vec2 p1 = CircularAt(P, i + 1);
-        if (line_intersects_circle(center, radius, p0, p1)) {
-            is_valid_continuation = false;
-        }
-    }
-
-    if (is_valid_continuation) {
-        return true;
-    }
-
-    // TEST2 : Same line continuation
-    is_valid_continuation = true;
-    const double angle_fw_i = AngleUtils::spanned_shortest(P.col(r.v0_prev), pi, pj);
-    const double angle_fw_j = AngleUtils::spanned_shortest(P.col(r.v1_next), pj, pi);
-    if (angle_fw_i < PF_RAD(159) || angle_fw_j < PF_RAD(159)) {
-        is_valid_continuation = false;
-    }
-     
-    if (!is_valid_continuation) {
-        return false;
-    }
-
-    return true;
 }
 
 // For a possible continuation it computes the angles and distance measures and returns
@@ -636,13 +528,8 @@ std::vector<Continuation> Regularity::find_continuation_candidates(
 					Continuation r1((int)Circular(V, i - 1), i, move_i, j, move_j, (int)Circular(V, j + 1));
 					Continuation r2((int)Circular(V, i + 1), i, move_i, j, move_j, (int)Circular(V, j - 1));
 
-#if USE_CONTINUATION_LOGIC_2018
-                    bool r1_valid = is_continuation_valid_2018(P, V, r1, circular, resolution_scaling_factor, reg);
-                    bool r2_valid = is_continuation_valid_2018(P, V, r2, circular, resolution_scaling_factor, reg);
-#else
 					bool r1_valid = is_continuation_valid(P, V, r1, circular, resolution_scaling_factor, reg);
 					bool r2_valid = is_continuation_valid(P, V, r2, circular, resolution_scaling_factor, reg);
-#endif
 
 					if (r1_valid || r2_valid)
 					{

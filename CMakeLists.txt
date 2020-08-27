@@ -77,6 +77,7 @@ set_target_properties(polyvec-lib
 # Include directories for the vectorization library
 target_include_directories(polyvec-lib PUBLIC 
     "${CMAKE_CURRENT_SOURCE_DIR}/include" 
+	"${CMAKE_CURRENT_SOURCE_DIR}/dependencies"
 )
 
 # In order to link against cairo on Windows using MSVC, a x64 .lib/.dll binaries are bundled in the repository

@@ -39,14 +39,14 @@ namespace {
             std::vector<int> holes;
             int outer_boundary;
             conn.region_to_polygon(j, outer_boundary, holes);
-            draw::polyline(conn.get_polygon_points(outer_boundary).cast<double>(), Style::outline(colors::black, .75));
+            draw::polyline(conn.get_polygon_points(outer_boundary).cast<double>(), Style::outline(colors::gray, .75));
         }
     }
 }
 
 int main(int argc, char* argv[]) {
     if (argc < 4) {
-		fprintf(stderr, "Expected <input_image> <trained_classifier> <output_dir>");
+        fprintf(stderr, "Expected <input image> <serialized classifier> <output directory>");
         return EXIT_FAILURE;
     }
 
@@ -74,6 +74,7 @@ int main(int argc, char* argv[]) {
     PF_DEV_F("Exporting %llu boundaries", boundaries_by_area.size());
 
     // -----------------------------------------------------------------------------------------------------------------
+    if (0)
     {
         DevicePDF* pdf = new DevicePDF(StringUtils::join_path(write_dir, "input.svg").c_str(), 1, 1);
 
@@ -186,14 +187,13 @@ int main(int argc, char* argv[]) {
                     draw::line(PP.col(r.v01), PP.col(r.v10), Style::outline(color_parallel, 3.5, LineType::Dash));
                 }
             }
-            for (auto& r : boundary.regularity_graph().continuations()) {
-                const vec2 p0 = PP.col(r.v0);
-                const vec2 p1 = PP.col(r.v1);
-                draw::point(p0, .1, Style::fill(colors::red));
-                draw::point(p1, .1, Style::fill(colors::red));
-                draw::line(p0, p1, Style::outline(colors::red, 2.5));
-            }
-            
+			for (auto& r : boundary.regularity_graph().continuations()) {
+				const vec2 p0 = PP.col(r.v0);
+				const vec2 p1 = PP.col(r.v1);
+				draw::point(p0, .1, Style::fill(colors::red));
+				draw::point(p1, .1, Style::fill(colors::red));
+				draw::line(p0, p1, Style::outline(colors::red, 2.5));
+			}
             pdf->draw(0, 0);
             delete pdf;
         }
@@ -357,7 +357,7 @@ int main(int argc, char* argv[]) {
     // -----------------------------------------------------------------------------------------------------------------
     if (0)
     {
-        const string curves_uri = StringUtils::join_path(write_dir, "curves_primitives.svg");
+        const string curves_uri = StringUtils::join_path(write_dir, "curves_outline.svg");
         DevicePDF* pdf = new DevicePDF(curves_uri.c_str(), 1, 1);
         draw_all_boundaries(raster_conn);
         for (size_t i = 0; i < boundaries_by_area.size(); ++i) {
@@ -584,7 +584,7 @@ int main(int argc, char* argv[]) {
         io::SvgCanvas svg(StringUtils::join_path(write_dir, "paper_figure_grid.svg").c_str(), canvas_width, canvas_height);
         for (const ImageBoundary& boundary : tracer.boundaries()) {
             init_paper_figure_data_from_boundary(boundary.id());
-            draw_all_boundaries(raster_conn);
+            draw_paper_figures::grid(paper_figure_data);
         }
     }
     

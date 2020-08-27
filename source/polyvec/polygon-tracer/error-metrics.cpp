@@ -15,28 +15,14 @@
 // Eigen
 #include <Eigen/Geometry>
 
-#define TEST_PARAM_DEFAULT(v) (v)
-#define TEST_PARAM_20_UP(v) ((v) + (.1 * (v)))
-#define TEST_PARAM_20_DOWN(v) ((v) - (.1 * (v)))
+#define SMOOTHNESS_LIMIT VectorOptions::get()->error_smoothness_limit
+#define CONTINUITY_LIMIT VectorOptions::get()->error_continuity_limit
+#define INFLECTION_LIMIT VectorOptions::get()->error_inflection_limit
+#define INFLECTION_PENALTY VectorOptions::get()->error_inflection_penalty
 
-// 1.
-#define SMOOTHNESS_LIMIT TEST_PARAM_DEFAULT(VectorOptions::get()->error_smoothness_limit)
-
-// 2.
-#define CONTINUITY_LIMIT TEST_PARAM_DEFAULT(VectorOptions::get()->error_continuity_limit)
-
-// 3.
-#define INFLECTION_LIMIT TEST_PARAM_DEFAULT(VectorOptions::get()->error_inflection_limit)
-
-// 4.
-#define INFLECTION_PENALTY TEST_PARAM_DEFAULT(VectorOptions::get()->error_inflection_penalty)
-
-// unit weight
 #define SMOOTHNESS_WEIGHT VectorOptions::get()->error_smoothness_weight
 #define ACCURACY_WEIGHT VectorOptions::get()->error_accuracy_weight
-
-// 5.
-#define CONTINUITY_WEIGHT TEST_PARAM_DEFAULT(VectorOptions::get()->error_continuity_weight)
+#define CONTINUITY_WEIGHT VectorOptions::get()->error_continuity_weight
 
 using namespace polyvec;
 using namespace std;

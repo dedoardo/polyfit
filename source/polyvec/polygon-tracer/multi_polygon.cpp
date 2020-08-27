@@ -242,7 +242,7 @@ void MultiPolygonTracer::trace() {
     _remove_non_shared_midpoints();
     _extract_junctions();
     _extract_polygon_forcing_junctions();
-    //_preserve_thickness_at_kopf_junctions();
+    _preserve_thickness_at_kopf_junctions();
     _merge_polygons_and_compute_open_segments_info();
     _calculate_coordinate_system_directions_along_open_segments();
     _build_polygon_half_edges_and_fill_junctions_map();
@@ -1411,8 +1411,7 @@ void MultiPolygonTracer::_merge_consecutive_parallel_lines_except_at_junctions()
         merge_consecutive_parallel_lines(_boundaries[i].spline(), true, merge_from, merge_to, junctions_per_boundary[i]);
     }
 
-    // We cannot merge lines across junctions, but to enforce G^1 continuity we need to fix the tangents 
-    // for the primitives before and after the junction.
+    // We cannot merge lines across junctions, but to enforce G^1 continuity we need to fix the tangents before
     for (ImageBoundary& boundary : _boundaries) {
         auto& primitives = boundary.spline().primitives;
         for (int prim_id_prev = 0; prim_id_prev < primitives.size(); ++prim_id_prev) {
@@ -1472,8 +1471,11 @@ void print_primitives_cps(const vector<CurvePrimitive>& prims) {
     additional objectives at junctions to prevent gaps.
 */
 void MultiPolygonTracer::_solve_curves() {
+    //PF_DEV_S("Curves before optimization 12");
+    //print_primitives_cps(_boundaries[12].spline().primitives);
     _curve_fitter->solve_with_stiffening();
-    //_curve_fitter->solve();
+    //PF_DEV_S("Curves after optimization 12");
+    //print_primitives_cps(_boundaries[3].spline().primitives);
 }
 
 void MultiPolygonTracer::_post_process() {
@@ -1758,29 +1760,11 @@ void MultiPolygonTracer::_merge_curves_at_junctions() {
                 curves_split_prev.clear();
                 curves_split_next.clear();
 
-                auto find_new_junction_location = [&](GlobFitCurve* curve) -> Eigen::Vector2d {
-                    if (valence == 4) {
-                        return boundary_vertex_pos_from_id(junction_to_he.first);
-                    } else {
-                        const int boundary_G0_0 = _he_polygon.boundary(_he_polygon.prev(_he_polygon.twin(he)));
-                        const int v_other = _he_polygon.vertex_to(_he_polygon.prev(_he_polygon.twin(he)));
-                        const int line_prim_idx = _boundaries[boundary_G0_0].find_line_before_polygon_vertex(v_other);
-                        auto line = _boundaries[boundary_G0_0].spline().primitives[line_prim_idx].curve->get_curve();
-
-                        const Vector2d line_src = Num::lerp(line->pos(0.), line->pos(1.), -10.);
-                        const Vector2d line_dst = Num::lerp(line->pos(0.), line->pos(1.), +10.);
-                        double line_t, curve_t;
-                        if (curve->approximate_intersect_ray_closest(line_src, (line_dst - line_src), line_t, curve_t) > 0) {
-                            return Num::lerp(line_src, line_dst, line_t);
-                        } else { // This shouldn't happen in theory but it's a robust way to handle some unseen degenerate cases
-                            return boundary_vertex_pos_from_id(junction_to_he.first);
-                        }
-                    }
-                };
+                const vec2 corner_pos = boundary_vertex_pos_from_id(junction_to_he.first);
 
                 // todo: we should split at the intersection of the line and the curve (or any other generic sequence of primitives)
+                // todo: we should be more careful in the presence of valence 4 junctions
                 if (cloned_curves.size() == 2 && cloned_curves[0].curve->get_curve()->get_type() == GLOBFIT_CURVE_BEZIER) {
-                    const vec2 corner_pos = find_new_junction_location(cloned_curves[0].curve->get_curve().get());
                     const double corner_pos_t = cloned_curves[0].curve->get_curve()->project(corner_pos);
                     corner_pos_new = cloned_curves[0].curve->get_curve()->pos(corner_pos_t);
                     pair<CurvePrimitive, CurvePrimitive> curves_split = cloned_curves[0].split(corner_pos_t);
@@ -1788,8 +1772,8 @@ void MultiPolygonTracer::_merge_curves_at_junctions() {
                     curves_split_prev.emplace_back(move(curves_split.second));
                     curves_split_prev.emplace_back(move(cloned_curves[1]));
                     PF_VERBOSE_F("Junction %d case 0", junction_to_he.first);
-                } else if (cloned_curves.size() == 2 && cloned_curves[1].curve->get_curve()->get_type() == GLOBFIT_CURVE_BEZIER) {
-                    const vec2 corner_pos = find_new_junction_location(cloned_curves[1].curve->get_curve().get());
+                }
+                else if (cloned_curves.size() == 2 && cloned_curves[1].curve->get_curve()->get_type() == GLOBFIT_CURVE_BEZIER) {
                     const double corner_pos_t = cloned_curves[1].curve->get_curve()->project(corner_pos);
                     corner_pos_new = cloned_curves[1].curve->get_curve()->pos(corner_pos_t);
                     pair<CurvePrimitive, CurvePrimitive>  curves_split = cloned_curves[1].split(corner_pos_t);
@@ -1797,11 +1781,10 @@ void MultiPolygonTracer::_merge_curves_at_junctions() {
                     curves_split_next.emplace_back(move(curves_split.first));
                     curves_split_prev.emplace_back(move(curves_split.second));
                     PF_VERBOSE_F("Junction %d case 1", junction_to_he.first);
-                } else {
+                }
+                else {
                     PF_ASSERT(cloned_curves.size() == 1);
                     PF_ASSERT(cloned_curves[0].curve->get_curve()->get_type() == GLOBFIT_CURVE_BEZIER);
-                    const vec2 corner_pos = find_new_junction_location(cloned_curves[0].curve->get_curve().get());
-                    const vec2 corner_pos_2 = boundary_vertex_pos_from_id(junction_to_he.first);
                     const double corner_pos_t = cloned_curves[0].curve->get_curve()->project(corner_pos);
                     corner_pos_new = cloned_curves[0].curve->get_curve()->pos(corner_pos_t);
                     pair<CurvePrimitive, CurvePrimitive> curves_split = cloned_curves[0].split(corner_pos_t);
@@ -1906,48 +1889,6 @@ void MultiPolygonTracer::_merge_curves_at_junctions() {
                 auto points = dynamic_pointer_cast<GlobFitCurve_Line>(line_param_before_junction->get_curve())->get_points();
                 points.col(1) = dynamic_pointer_cast<BezierCurve>(bezier_param_after_junction->get_curve())->get_control_points().col(0);
                 dynamic_pointer_cast<GlobFitCurve_Line>(line_param_before_junction->get_curve())->set_points(points);
-            }
-        }
-    
-        // Handling the case where there is one region surrounded by C^0 only regions *after* the continuous ones
-        // have been resolved
-        for (const int he_prev : he_at_junction) {
-            const int boundary_G0 = _he_polygon.boundary(he_prev);
-            if (_boundaries[boundary_G0].tangents_fits()[_he_polygon.vertex_to(he_prev)] != TANGENT_FIT_CONSTANT) {
-                continue;
-            }
-
-            const int he_next = _he_polygon.next(he_prev);
-
-            const bool replace_prev = he_to_cloned_curves.find(he_prev) != he_to_cloned_curves.end();
-            const bool replace_next = he_to_cloned_curves.find(he_next) != he_to_cloned_curves.end();
-
-            if (!replace_prev && !replace_next) {
-                const int vertex_junction = _he_polygon.vertex_to(he_prev);
-                const int curve_id_before = _boundaries[boundary_G0].find_line_before_polygon_vertex(vertex_junction);
-                const int curve_id_after = _boundaries[boundary_G0].find_line_after_polygon_vertex(vertex_junction);
-                if (curve_id_before < 0 || curve_id_after < 0) {
-                    continue;
-                }
-
-                // get the new position from one of the neighboring boundary, it doesn't matter which one of the two 
-                // assuming that the previous junction resolution worked properly.
-                const int boundary_other = _he_polygon.boundary(_he_polygon.twin(he_prev));
-                const int vertex_junction_other = _he_polygon.vertex_from(_he_polygon.twin(he_prev));
-                const int curve_id_other = _boundaries[boundary_other].find_line_after_polygon_vertex(vertex_junction_other);
-                const vec2 pos_new_junction = _boundaries[boundary_other].spline().primitives[curve_id_other].curve->get_curve()->pos(0.);
-
-                auto line_before = dynamic_pointer_cast<GlobFitCurve_Line>(_boundaries[boundary_G0].spline().primitives[curve_id_before].curve->get_curve());
-                auto line_after = dynamic_pointer_cast<GlobFitCurve_Line>(_boundaries[boundary_G0].spline().primitives[curve_id_after].curve->get_curve());
-
-                auto line_before_pts = line_before->get_points();
-                line_before_pts.col(1) = pos_new_junction;
-                line_before->set_points(line_before_pts);
-
-                auto line_after_pts = line_after->get_points();
-                line_after_pts.col(0) = pos_new_junction;
-                line_after->set_points(line_after_pts);
-
             }
         }
     }

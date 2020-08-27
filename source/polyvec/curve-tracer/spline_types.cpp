@@ -5,7 +5,7 @@
 #include <polyvec/utils/directions.hpp>
 #include <polyvec/utils/curve_sampling.hpp>
 
-#define TANGENT_SAMPLES_PER_UNIT_ARCLENGTH 2
+#define TANGENT_SAMPLES_PER_UNIT_ARCLENGTH 8
 
 //Adds linearly interpolated tangent samples for the given Bezier curve to tangents/ts.
 //This is the new scheme

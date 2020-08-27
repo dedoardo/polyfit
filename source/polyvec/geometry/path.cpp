@@ -283,6 +283,147 @@ bool are_consecutive_angles_opposite(const vec2& p0, const vec2& p1, const vec2&
 	return sign_xprev * sign_xnext == 0 ? false : sign_xprev == sign_xnext;
 }
 
+/* OLD VERSION USING WYKOBY primitives
+vec2 distance_bounds_from_points(const mat2x& points, const mat2& p, vec2i vp) {
+	Vertex voxel_src = vp(0);
+	Vertex voxel_dst = vp(1);
+	vec2 from = p.col(0);
+	vec2 to = p.col(1);
+
+	// This happens when the raster region has 1-pixel wide diagonals
+	if (voxel_src != voxel_dst && GeomRaster::are_overlapping(from, to)) {
+		return vec2(FLT_MAX, FLT_MAX);
+	}
+
+	const double WEAK_THR = .5;
+
+	// This is perfectly valid. The reason is that generated nodes store the respective voxel
+	// with the `-` sign in front.
+	voxel_src = abs(voxel_src);
+	voxel_dst = abs(voxel_dst);
+
+	//
+	// Finding how voxel midpoints to check for accuracy
+	geom::segment edge_segment(from, to);
+	const double edge_segment_len = edge_segment.length() + constants::Eps;
+	::polyvec::index n_voxels = points.cols();
+	::polyvec::index num_nodes = -1;
+
+	if (voxel_dst < voxel_src) {
+		num_nodes = voxel_dst + n_voxels - voxel_src;
+	} else {
+		num_nodes = voxel_dst - voxel_src;
+	}
+
+	//
+	// Keeping track of the maximum violation
+	double max_in_accuracy_violation = -1.;
+	double max_out_accuracy_violation = -1.;
+
+	for (int i = 0; i < num_nodes; ++i) {
+		::polyvec::index v = (voxel_src + i) % n_voxels;
+		::polyvec::index next_v = (v + 1) % n_voxels;
+
+		// only considering pixel points, not raster points,
+		// todo: this shouldn't really be here
+		if ((points.col(v) - points.col(next_v)).norm() < 1. - PF_EPS) {
+			next_v = (v + 2) % n_voxels;
+			PF_ASSERT((points.col(v) - points.col(next_v)).norm() >= 1. - PF_EPS);
+			++i;
+		}
+
+		Vector2d cur = points.col(v);
+		Vector2d next = points.col(next_v);
+		Vector2d midpoint = 0.5 * (cur + next);
+		Vector2d normal = next - cur;
+
+		normal = polyvec::util::normal_dir(normal).normalized();		
+
+		// WEAK ACCURACY (<0.5) - FIRST TEST
+		// We first check along the midpoint normal
+		double d = std::numeric_limits<double>::quiet_NaN();
+
+		const vec2 n_abs = normal.cwiseAbs();
+
+		if (geom::ray_intersect(midpoint, normal, edge_segment, d)) {
+			//PF_ASSERT(abs(d - d2) < 1e-4 ||abs(d + d2) < 1e-4);
+					
+			if (std::abs(d) >= WEAK_THR) {
+				d = std::numeric_limits<double>::quiet_NaN();				
+			}
+		}
+
+		if (std::isnan(d))
+		{
+			// STRONG ACCURACY (>=0.5 to 0.5+slack) - SECOND TEST
+			// Accuracy is checked as distance from the offset midpoint and its projection on the segment
+			real2 off_midpoint_out = midpoint + 0.5 * normal;
+			real2 off_midpoint_in = midpoint - 0.5 * normal;
+
+			double dist_out = -1;
+			double dist_in = -1;
+
+			real2 out_proj = geom::project(off_midpoint_out, edge_segment);
+			real2 in_proj = geom::project(off_midpoint_in, edge_segment);
+
+			// Is the point on the line ?
+			if (!geom::point_on_line(edge_segment, out_proj) && !geom::point_on_line(edge_segment, in_proj)) {
+				//printf("edge    (%f %f) (%f %f)\n", edge_segment.src(0), edge_segment.src(1), edge_segment.dst(0), edge_segment.dst(1));
+				//printf("out proj %f %f\n", out_proj(0), out_proj(1));
+				//printf("in  proj %f %f\n", in_proj(0), in_proj(1));
+				return vec2(FLT_MAX, FLT_MAX);
+			}
+
+			real2 d_out = (out_proj - off_midpoint_out).cwiseAbs();
+			real2 d_in = (in_proj - off_midpoint_in).cwiseAbs();
+
+			dist_out = ::std::max(d_out.x(), d_out.y());
+			dist_in = ::std::max(d_in.x(), d_in.y());
+
+			assert_break(dist_out >= 0.);
+			assert_break(dist_in >= 0.);
+
+			if (dist_out < dist_in) {
+				d = abs(.5 + dist_out);
+			}
+			else {
+				d = -abs(.5 + dist_in);
+			}
+		}
+
+		if (d > 0) {
+			max_out_accuracy_violation = max(max_out_accuracy_violation, abs(d));
+		}
+		else {
+			max_in_accuracy_violation = max(max_in_accuracy_violation, abs(d));
+		}
+	}
+
+	double accuracy_in = 0.;
+	double accuracy_out = 0.;
+
+	if (max_out_accuracy_violation > 0) {
+		accuracy_out = max_out_accuracy_violation;
+	}
+
+	if (max_in_accuracy_violation > 0) {
+		accuracy_in = max_in_accuracy_violation;
+	}
+
+	return vec2(std::min(accuracy_in, accuracy_out), std::max(accuracy_in, accuracy_out));
+}
+
+bool edge_is_within_relaxed_distance_bounds(const mat2x& P, const int vsrc, const int vdst) {
+	mat2 e;
+	e.col(0) = P.col(vsrc);
+	e.col(1) = P.col(vdst);
+	const vec2 d_error = PathUtils::distance_bounds_from_points(P, e, {vsrc, vdst});
+	return ErrorMetrics::accuracy_within_bounds_relaxed(d_error.minCoeff(), d_error.maxCoeff());
+
+
+}
+*/
+
 // returns true if exp is the first vertex encountered traversing the polygon P from i in direction d
 bool points_in_same_partition(const mat2x& P, Vertex i, Vertex exp, Vertex fail, int d) {
 	Vertex v = i + d;

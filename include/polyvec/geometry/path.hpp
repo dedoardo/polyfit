@@ -84,6 +84,14 @@ double shortest_angle_spanned(const vec2& p0, const vec2& p1, const vec2& p2);
 // checks if the edge p1p2 is an inflection. It checks if the sign of the cross product 
 // to rotate the previous/next edge has a different sign
 bool are_consecutive_angles_opposite(const vec2& p0, const vec2& p1, const vec2& p2, const vec2& p3);
+	
+// evaluates the distance between the midpoints of P in range vp(0) vp(1) to the edge. The edge doesn't
+// necessarily have to start at specific points of P, hence the separated indices
+vec2 distance_bounds_from_points (const mat2x& P, const mat2& E, vec2i vp);
+
+// More compact version of the function above which returns true if the edge connecting the two vertices
+// is within the relaxed accuracy threshold
+bool edge_is_within_relaxed_distance_bounds(const mat2x& P, const int vsrc, const int vdst);
 
 // returns true if exp is the first vertex encountered traversing the polygon P from i in direction d
 bool points_in_same_partition(const mat2x& P, Vertex i, Vertex exp, Vertex fail, int d);

@@ -6,7 +6,6 @@
 #include <polyvec/geometry/path.hpp>
 #include <polyvec/geometry/winding_number.hpp>
 #include <polyvec/geometry/line.hpp>
-#include <polyvec/geometry/raster.hpp>
 #include <polyvec/polygon-tracer/error-metrics.hpp>
 #include <polyvec/utils/matrix.hpp>
 
@@ -139,11 +138,15 @@ bool test_edge_accuracy(
 	const int vsrc,
 	const int vdst
 ) {
-    const vec2 psrc = B.col(vsrc);
-    const vec2 pdst = B.col(vdst);
-    const vec2 d_error = GeomRaster::distance_bounds_from_points_with_slack(B, psrc, pdst, vsrc, vdst);
+	mat2 e;
+	e.col(0) = B.col(vsrc);
+	e.col(1) = B.col(vdst);
+
+	const vec2 d_error = PathUtils::distance_bounds_from_points(B, e, vec2i(vsrc, vdst));
+
 	PF_VERBOSE_F("test edge %d - %d accuracy %f %f", vsrc, vdst, d_error.minCoeff(), d_error.maxCoeff());
-	return ErrorMetrics::accuracy_within_bounds(d_error.minCoeff(), d_error.maxCoeff(), psrc - pdst);
+
+	return ErrorMetrics::accuracy_within_bounds(d_error.minCoeff(), d_error.maxCoeff(), e.col(0) - e.col(1));
 }
 
 // Are we breaking existing parallel edges ?

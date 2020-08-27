@@ -135,8 +135,8 @@ public:
 
 		// We want the corner to be inserted to be aligned, while the polygon should
 		// go through the opposite
-		const bool contains_min = contains0_min && contains1_min;
-		const bool contains_max = contains0_max && contains1_max;
+		const bool contains_min = contains0_min || contains1_min;
+		const bool contains_max = contains0_max || contains1_max;
 		const bool can_regularize_min = contains_max || contains_min;// && !contains_min;
 		const bool can_regularize_max = contains_min || contains_max;// && !contains_max;
 

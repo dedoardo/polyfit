@@ -33,21 +33,7 @@ public:
         if (accuracy_old == INFINITY) {
             return false;
         }
-        
-        // Let's just test that we have not regularized a single pixel edge
-        for (Index i = 0; i < polygon_new.size(); ++i) {
-            if (polygon_new(i) == v_aa_90) {
-                const vec2 pp = raster.col(CircularAt(polygon_new, i - 1));
-                const vec2 p = raster.col(polygon_new(i));
-                const vec2 pn = raster.col(CircularAt(polygon_new, i + 1));
-                if ((p - pp).squaredNorm() < 1. + PF_EPS || (pn - p).squaredNorm() < 1. + PF_EPS) {
-                    return false;
-                }
-            }
-        }
 
-        return true;
-#if 0
         // Get the edge after the one which we have just regularized and check if the accuracy has improved
         PF_VERBOSE_F("is polygon acceptable %d", v_aa_90);
         for (Index i = 0; i < polygon_new.size(); ++i) {
@@ -66,12 +52,11 @@ public:
                 const vec2 p_next = raster.col(CircularAt(polygon_new, v_next));
                 accuracy_new = GeomRaster::distance_bounds_from_points_with_slack(raster, p_prev, p_next, CircularAt(polygon_new, v_prev), CircularAt(polygon_new, v_next)).maxCoeff();
                 PF_VERBOSE_F("accuracy_old %f accuracy_new %f direction %d vertex %d v_prev %d v_next %d", accuracy_old, accuracy_new, direction, v_aa_90, v_prev, v_next);
-                return accuracy_new < accuracy_old + PF_EPS;
+                return accuracy_new < accuracy_old + 0.1;
             }
         }
 
         return false;
-#endif
     }
 
     std::vector<size_t> get_edges_to_delete(const mat2x& raster, const vecXi& polygon, const std::vector<BoundaryGraph::Edge>& E, bool circular) const
@@ -161,7 +146,6 @@ void add_90_degree_edges(
 
         // Skipping 1x1 pixels as the regularization will not be successful anyway
         const bool is_regularizable = abs(1. - (pn - p).cwiseAbs().minCoeff()) < PF_EPS && CircularDist(raster, polygon(i), CircularAt(polygon, i + 1)) > 2;
-
         if (!is_regularizable) {
             continue;
         }
@@ -186,8 +170,8 @@ void add_90_degree_edges(
             make_prev_90 = is_prev_aa;
         }
 
-        PF_DEV_F("Regularizing %d %d %d %d make_prev %d", Circular(polygon, i - 1), i, Circular(polygon, i + 1), Circular(polygon, i + 2), make_prev_90);
-        PF_DEV_F("regularizing edge %d %d", polygon(i), CircularAt(polygon, i + 1));
+        PF_VERBOSE_F("Regularizing %d %d %d %d make_prev %d", Circular(polygon, i - 1), i, Circular(polygon, i + 1), Circular(polygon, i + 2), make_prev_90);
+        PF_VERBOSE_F("regularizing edge %d %d", polygon(i), CircularAt(polygon, i + 1));
         if (make_prev_90) {
             regularity_actions.emplace_back(new AxisAligned90DegreeRegularity(polygon(i)));
             PF_VERBOSE_F("Attempt to orthogonalize at vertex %d", polygon(i));

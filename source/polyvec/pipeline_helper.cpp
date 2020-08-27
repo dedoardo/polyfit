@@ -80,6 +80,12 @@ InputData polyvec::load_input(const std::string& image_path)
 	InputData data;
 	std::vector<vec4> colors;
 	std::vector<polyfit::mat2x> boundaries;
+
+	if (!I.pixels) {
+		PF_LOGF("image not found %s", image_path.c_str());
+		throw std::runtime_error("Image not found");
+	}
+
 	ImageSegment::expand_and_cleanup(I);
 	ImageSegment::extract_closed_regions(I, boundaries, colors);
 	
