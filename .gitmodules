@@ -1,9 +1,6 @@
 [submodule "dependencies/random-forest"]
 	path = dependencies/random-forest
 	url = https://github.com/bjoern-andres/random-forest
-[submodule "dependencies/eigen"]
-	path = dependencies/eigen
-	url = https://gitlab.com/libeigen/eigen.git
 [submodule "dependencies/stb"]
 	path = dependencies/stb
 	url = https://github.com/nothings/stb
