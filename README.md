@@ -1,5 +1,5 @@
 # PolyFit: Clip-art vectorization
-Code for the SIGGRAPH 2020 paper [PolyFit: Perception-Aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
+Code & Data for the SIGGRAPH 2020 paper [PolyFit: Perception-Aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
 
 ## Building
 `git clone --recursive https://github.com/dedoardo/polyfit`
@@ -12,6 +12,9 @@ Open the folder or CMake generated solution in Visual Studio (use a 2017 compile
 The output will be written to vectorization/curves_closed
 
 If you are interested in visualizing different stages of the algorithm, uncomment the respective lines in `apps/polyfit.cpp` and rebuild.
+
+## Data
+All the results shown in the paper and used in the user study are contained in the data directory.
 
 ## Dependencies
 The code depends on the following libraries, but they should be handled automatically through git submodule.
