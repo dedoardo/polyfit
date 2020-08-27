@@ -1,5 +1,5 @@
 # PolyFit: Clip-art vectorization
-Code for the [SIGGRAPH 2020 paper PolyFit: Perception-Aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
+Code for the SIGGRAPH 2020 paper [PolyFit: Perception-Aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
 
 ## Building
 `git clone --recursive https://github.com/dedoardo/polyfit`
