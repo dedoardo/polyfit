@@ -9,7 +9,7 @@ Open the folder or CMake generated solution in Visual Studio (use a 2017 compile
 ## Running
 `polyfit.exe "data/binary_input/pear-32/input.png" "trained/random_forest_paper.txt" vectorization`
 
-The output will be written to vectorization/curves_closed
+The output will be written to `vectorization/curves_closed.svg`
 
 If you are interested in visualizing different stages of the algorithm, uncomment the respective lines in `apps/polyfit.cpp` and rebuild.
 
