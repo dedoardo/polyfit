@@ -492,7 +492,7 @@ void connect_valid_edges(
 				edge.flags |= ErrorMetrics::EDGE_LAST_IN_PATH;
 			}
 
-			if (circular || i > 0 && i < P.cols() - 2) {
+			if (circular || (i > 0 && i < P.cols() - 2)) {
 				const vec2 p0 = CircularAt(P, i - 1);
 				const vec2 p1 = CircularAt(P, i);
 				const vec2 p2 = CircularAt(P, i + 1);

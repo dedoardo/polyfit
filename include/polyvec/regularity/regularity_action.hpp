@@ -17,6 +17,7 @@ public:
     virtual bool can_introduce_degenerate_edges() const = 0;
     virtual bool can_introduce_inflections() const { return false; }
     virtual bool is_polygon_acceptable(const mat2x& raster, const vecXi& polygon_old, const vecXi& polygon_new, bool circular) const = 0;
+    virtual ~RegularityAction() = default;
 };
 
 // Applies regularities by modifying the edge set of a boundary graph. If a regularity

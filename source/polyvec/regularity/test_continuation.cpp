@@ -198,7 +198,7 @@ void filter_same_side_continuations_greedy(
             const bool same_side_01 = R[i].v0 == R_unique[j].v1 && R[i].v0_prev == R_unique[j].v1_next;
             const bool same_side_10 = R[i].v1 == R_unique[j].v0 && R[i].v1_next == R_unique[j].v0_prev;
             const bool same_side_11 = R[i].v1 == R_unique[j].v1 && R[i].v1_next == R_unique[j].v1_next;
-            discard = (same_polygon_0 && (same_side_00 || same_side_01) ||
+            discard = ((same_polygon_0 && (same_side_00 || same_side_01)) ||
                       (same_polygon_1 && (same_side_10 || same_side_11)));
         }
 

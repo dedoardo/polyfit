@@ -64,8 +64,8 @@ int collapse_asymmetric_constant_steps(
 				continue;
 			}
 
-			fprintf(stderr, "Collapse %d(%d) %d(%d)\n", i, vi, Circular(P, i + 1), vj);
-			fprintf(stderr, "dist %f %\n ", (pi - pj)(0), (pi - pj)(1));
+			fprintf(stderr, "Collapse %zu(%zu) %zu(%zu)\n", i, vi, Circular(P, i + 1), vj);
+			fprintf(stderr, "dist %f %f\n ", (pi - pj)(0), (pi - pj)(1));
 
 			Index i_opp = -1, j_opp = -1;
 			int i_opp_sym_size = 0, j_opp_sym_size = 0;
@@ -110,8 +110,8 @@ int collapse_asymmetric_constant_steps(
 
 			const int vdist_prev = CircularDist(B, PathUtils::next_transition_vertex(C, vi, -1, circular), vi);
 			const int vdist_next = CircularDist(B, vj, PathUtils::next_transition_vertex(C, vj, +1, circular));
-			printf("dist to %d : %d\n", vi, vdist_prev);
-			printf("dist from %d : %d\n", vj, vdist_next);
+			printf("dist to %zu : %d\n", vi, vdist_prev);
+			printf("dist from %zu : %d\n", vj, vdist_next);
 
 			Index vnew, vnew_opp = -1;
 			if (vdist_prev > vdist_next) {
@@ -130,13 +130,13 @@ int collapse_asymmetric_constant_steps(
 			}
 
 			PF_ASSERT(vnew != -1);
-			printf("relocating %d: %d -> %d\n", i, P(i), vnew);
+			printf("relocating %zu: %d -> %zu\n", i, P(i), vnew);
 			P(i) = vnew;
 			tangent_fits[i] = TANGENT_FIT_CONSTANT;
 
 			if (is_opp_valid) {
 				PF_ASSERT(vnew_opp != -1);
-				printf("relocating %d: %d -> %d\n", i_opp, P(i_opp), vnew_opp);
+				printf("relocating %zu: %d -> %zu\n", i_opp, P(i_opp), vnew_opp);
 				P(i_opp) = vnew_opp;
 				tangent_fits[i_opp] = TANGENT_FIT_CONSTANT;
 			}
