@@ -1,6 +1,8 @@
 # PolyFit: Clip-art vectorization
 Code & Data for the SIGGRAPH 2020 paper [PolyFit: Perception-Aligned Vectorization of Raster Clip-art via Intermediate Polygonal Fitting](http://www.cs.ubc.ca/labs/imager/tr/2020/ClipArtVectorization/)
 
+The code has only been tested on Windows x64 with the Visual Studio 2017 compiler, for other platforms the active issue is [here](https://github.com/dedoardo/polyfit/issues/4). 
+
 ## Building
 `git clone --recursive https://github.com/dedoardo/polyfit`
 
