@@ -260,25 +260,25 @@ bool is_continuation_valid(
 
 	// Test separation angle
 	if (std::min(r.angle_separation_0, r.angle_separation_1) < Options::get()->regularity_continuation_angle_separation_max - PF_EPS) {
-		PF_VERBOSE_F("Fails angle separation");
+		PF_VERBOSE_S("Fails angle separation");
 		return false;
 	}
 
 	// Testing the continuation angle
 	if (r.angle_continuation_difference_0 < -PF_RAD(5) || r.angle_continuation_difference_1 < -PF_RAD(5)) {
-		PF_VERBOSE_F("Fails continuation difference");
+		PF_VERBOSE_S("Fails continuation difference");
 		return false;
 	}
 
 	if ((r.angle_continuation_0 > PF_EPS && r.angle_continuation_0 < Options::get()->regularity_continuation_angle_max) ||
 		(r.angle_continuation_1 > PF_EPS && r.angle_continuation_1 < Options::get()->regularity_continuation_angle_max)) {
-		PF_VERBOSE_F("Fails continuation angle");
+		PF_VERBOSE_S("Fails continuation angle");
 		return false;
 	}
 
 #if NEW_ANGLE_CRITERION
 	if (r.angle_polygon_0 < M_PI_4 - PF_EPS && r.angle_polygon_1 < M_PI_4 - PF_EPS) {
-		PF_VERBOSE_F("Fails polygon angle");
+		PF_VERBOSE_S("Fails polygon angle");
 		return false;
 	}
 
@@ -295,24 +295,24 @@ bool is_continuation_valid(
 
 #else
 	if (r.angle_polygon_0 < M_PI_4 + PF_EPS && r.angle_polygon_1 < M_PI_4 + PF_EPS) {
-		PF_VERBOSE_F("Fails polygon angle");
+		PF_VERBOSE_S("Fails polygon angle");
 		return false;
 	}
 #endif
 
 	// Testing the flat polygon angle
 	if (std::min(r.angle_polygon_0, r.angle_polygon_1) < Options::get()->regularity_continuation_angle_polygon_max) {
-		PF_VERBOSE_F("Fails polygon angle 2");
+		PF_VERBOSE_S("Fails polygon angle 2");
 		return false;
 	}
 
 	// Testing the intersection angle
 	if (r.intersection_angle < Options::get()->regularity_continuation_angle_intersection_max) {
-		PF_VERBOSE_F("Fails intersection separation");
+		PF_VERBOSE_S("Fails intersection separation");
 		return false;
 	}
 
-	PF_VERBOSE_F("Passes");
+	PF_VERBOSE_S("Passes");
 
 	return true;
 }
@@ -373,13 +373,13 @@ void Regularity::pick_continuations(
 
 		if (vertex_movement[r.v0] != INVALID && vertex_movement[r.v0] != r.move_v0)
 		{
-			PF_VERBOSE_F("Already moved vertex");
+			PF_VERBOSE_S("Already moved vertex");
 			continue; //We already moved v0 differently
 		}
 		
 		if (vertex_movement[r.v1] != INVALID && vertex_movement[r.v1] != r.move_v1)
 		{
-			PF_VERBOSE_F("Already moved vertex");
+			PF_VERBOSE_S("Already moved vertex");
 			continue; //We already moved v1 differently
 		}
 
@@ -388,13 +388,13 @@ void Regularity::pick_continuations(
 
 		if (target_v0 == CircularAt(V, r.v0 - 1) || target_v0 == CircularAt(V, r.v0 + 1))
 		{
-			PF_VERBOSE_F("Vertex V0 moves onto other vertex.");
+			PF_VERBOSE_S("Vertex V0 moves onto other vertex.");
 			continue;
 		}
 
 		if (target_v1 == CircularAt(V, r.v1 - 1) || target_v1 == CircularAt(V, r.v1 + 1))
 		{
-			PF_VERBOSE_F("Vertex V1 moves onto other vertex.");
+			PF_VERBOSE_S("Vertex V1 moves onto other vertex.");
 			continue;
 		}
 
@@ -403,7 +403,7 @@ void Regularity::pick_continuations(
 
 		if (cont0 || cont1)
 		{
-			PF_VERBOSE_F("One of the edges already has a continuation.");
+			PF_VERBOSE_S("One of the edges already has a continuation.");
 			continue;
 		}			
 

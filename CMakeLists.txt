@@ -103,11 +103,12 @@ elseif((${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
 	)
 
 	find_path(
-		Cairo_INCLUDE_DIRS 
-			cairo/cairo.h
+		Cairo_INCLUDE_DIRS
+			cairo.h
 		HINTS
 			"/usr/include"
 			"/usr/local/include"
+			"/usr/local/include/cairo"
 	)
 
 	target_include_directories(polyvec-lib SYSTEM PUBLIC ${Cairo_INCLUDE_DIRS})
@@ -136,15 +137,21 @@ if (MSVC)
 	target_compile_definitions(polyvec-lib PUBLIC "-D_CRT_SECURE_NO_WARNINGS")
 endif()
 
+if (${CMAKE_CXX_COMPILER_ID} STREQUAL "MSVC")
 # more header-only dependencies
-target_include_directories(polyvec-lib SYSTEM PUBLIC
-    # Used to list files in directory
-    "${CMAKE_SOURCE_DIR}/dependencies/dirent"
+	target_include_directories(polyvec-lib SYSTEM PUBLIC
+		# Used to list files in directory
+		"${CMAKE_SOURCE_DIR}/dependencies/dirent"
 
-    # Used to read raster images
-    "${CMAKE_SOURCE_DIR}/dependencies/stb"
-)
-
+		# Used to read raster images
+		"${CMAKE_SOURCE_DIR}/dependencies/stb"
+	)
+else()
+	target_include_directories(polyvec-lib SYSTEM PUBLIC
+			# Used to read raster images
+			"${CMAKE_SOURCE_DIR}/dependencies/stb"
+			)
+endif()
 
 # Building executables depending on it
 add_subdirectory(apps)
