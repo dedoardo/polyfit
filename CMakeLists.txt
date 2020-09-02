@@ -112,7 +112,7 @@ elseif((${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
 	)
 
 	target_include_directories(polyvec-lib SYSTEM PUBLIC ${Cairo_INCLUDE_DIRS})
-	target_link_libraries(polyvec-lib PUBLIC ${Cairo_LIBRARIES})
+	target_link_libraries(polyvec-lib PUBLIC Eigen3::Eigen ${Cairo_LIBRARIES})
 else()
 	message(FATAL_ERROR "Unrecognized compiler ${CMAKE_CXX_COMPILER_ID}")
 endif()
@@ -125,9 +125,14 @@ target_include_directories(polyvec-lib SYSTEM PUBLIC
 	"${CMAKE_CURRENT_SOURCE_DIR}/dependencies/random-forest/include"
 )
 
-# Eigen3.3 +
-# Todo: provide a FindEigen3.cmake
-target_include_directories(polyvec-lib SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/eigen")
+if (WIN32)
+	# Eigen3.3 +
+	# Todo: provide a FindEigen3.cmake
+	target_include_directories(polyvec-lib SYSTEM PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/dependencies/eigen")
+else()
+	find_package( EIGEN3 3.3 REQUIRED NO_MODULE )
+	target_include_directories( polyvec-lib SYSTEM PUBLIC ${EIGEN3_INCLUDE_DIRS} )
+endif()
 
 if (WIN32)
 	target_compile_definitions(polyvec-lib PUBLIC "-D_ENABLE_EXTENDED_ALIGNED_STORAGE")
