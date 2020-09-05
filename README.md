@@ -3,6 +3,8 @@ Code & Data for the SIGGRAPH 2020 paper [PolyFit: Perception-Aligned Vectorizati
 
 The code has only been tested on Windows x64 with the Visual Studio 2017 compiler, for other platforms the active issue is [here](https://github.com/dedoardo/polyfit/issues/4). 
 
+We have a [pre-release executable](https://github.com/dedoardo/polyfit/releases/tag/prerelease-paper) availble as well.
+
 ## Building
 `git clone --recursive https://github.com/dedoardo/polyfit`
 
