@@ -11,10 +11,14 @@ Open the folder or CMake generated solution in Visual Studio (use a 2017 compile
 
 The output will be written to `vectorization/curves_closed.svg`
 
-If you are interested in visualizing different stages of the algorithm, uncomment the respective lines in `apps/polyfit.cpp` and rebuild.
+If you are interested in visualizing different stages of the algorithm, build `polyfit_stages.cpp` instead and uncomment the respective lines relatives to the stages you are interested in visualizing.
 
 ## Data
 All the results shown in the paper and used in the user study are contained in the data directory.
+
+If you want to generate all the results as shown in the paper, copy the polyfit.exe executable in the root directory and run the following Python3 script. Alternatively, you can obtain the executable from one of the releases.
+
+`python scripts/run_data_baseline.py`
 
 ## Dependencies
 The code depends on the following libraries, but they should be handled automatically through git submodule.
