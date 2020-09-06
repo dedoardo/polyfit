@@ -11,11 +11,11 @@ We have a [pre-release executable](https://github.com/dedoardo/polyfit/releases/
 Open the folder or CMake generated solution in Visual Studio (use a 2017 compiler) and build polyfit.exe in Release(WithDebInfo) mode, the output will be written to the cmake source directory.
 
 ## Running
-`polyfit.exe "data/binary_input/pear-32/input.png" "trained/random_forest_paper.txt" vectorization`
+`polyfit.exe "data/binary_input/pear-32/input.png" "trained/random_forest_paper.txt" curves-fill.svg`
 
-The output will be written to `vectorization/curves_closed.svg`
+The output will be written to `curves-fill.svg`
 
-If you are interested in visualizing different stages of the algorithm, build `polyfit_stages.cpp` instead and uncomment the respective lines relatives to the stages you are interested in visualizing.
+If you are interested in visualizing different stages of the algorithm, build `polyfit_stages.cpp` instead and uncomment the respective lines relatives to the stages you are interested in visualizing. The usage is identical, except for the last argument which is a directory where the various stages will be written to as svgs.
 
 ## Data
 All the results shown in the paper and used in the user study are contained in the data directory.
