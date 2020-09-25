@@ -600,7 +600,7 @@ void GlobFitter::report_errors(FILE* error_file) {
 			Eigen::MatrixXd jac;
 			obj->compute_objective_and_jacobian(res, jac);
 			auto type = globfitobjectivetype_as_string(obj->get_type());
-			fprintf(error_file, "objective: %s\n", type);
+			fprintf(error_file, "objective: %s\n", type.c_str());
 			
 			fprintf(error_file, "values: ");
 			for (Eigen::Index k = 0; k < res.size(); ++k) {

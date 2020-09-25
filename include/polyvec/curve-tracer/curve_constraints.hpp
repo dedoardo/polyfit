@@ -9,7 +9,7 @@ NAMESPACE_BEGIN(polyvec)
 class GlobFitConstraint_LineDirection : public GlobFitConstraint
 {
 public:
-	GlobFitConstraint_LineDirection(GlobFitLineParametrization* line, GlobFitCurveParametrization::ParameterAddress& target);
+	GlobFitConstraint_LineDirection(GlobFitLineParametrization* line, const GlobFitCurveParametrization::ParameterAddress& target);
 
 	std::pair<double, Eigen::VectorXd> f();
 	

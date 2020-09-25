@@ -492,7 +492,7 @@ void connect_valid_edges(
 				edge.flags |= ErrorMetrics::EDGE_LAST_IN_PATH;
 			}
 
-			if (circular || i > 0 && i < P.cols() - 2) {
+			if (circular || (i > 0 && i < P.cols() - 2)) {
 				const vec2 p0 = CircularAt(P, i - 1);
 				const vec2 p1 = CircularAt(P, i);
 				const vec2 p2 = CircularAt(P, i + 1);
@@ -1141,7 +1141,7 @@ bool trace_symmetric(const mat2x& R,
 		bool fit_failed = false;
 
 		if (Vsym.empty()) {
-			PF_VERBOSE_F("no path found");
+			PF_VERBOSE_S("no path found");
 			fit_failed = true;
 		}
 		else {
@@ -1150,7 +1150,7 @@ bool trace_symmetric(const mat2x& R,
 			const int Vsym_inflections = AngleUtils::count_inflections(Psym, circular);
 
 			if (Vsym_inflections > V_inflections) {
-				PF_VERBOSE_F("bad symmetric fit, it would introduce an inflection");
+				PF_VERBOSE_S("bad symmetric fit, it would introduce an inflection");
 				fit_failed = true;
 			}
 
@@ -1159,7 +1159,7 @@ bool trace_symmetric(const mat2x& R,
 
 		// good, applying the changes
 		if (!fit_failed) {
-			PF_VERBOSE_F("symmetric fit found, applying changes");
+			PF_VERBOSE_S("symmetric fit found, applying changes");
 			E = std::move(Esym);
 			N = std::move(Nsym);
 			V = std::move(Vsym);

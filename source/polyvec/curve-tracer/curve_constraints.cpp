@@ -2,7 +2,7 @@
 
 using namespace polyvec;
 
-GlobFitConstraint_LineDirection::GlobFitConstraint_LineDirection(GlobFitLineParametrization* line, GlobFitCurveParametrization::ParameterAddress& target)
+GlobFitConstraint_LineDirection::GlobFitConstraint_LineDirection(GlobFitLineParametrization* line, const GlobFitCurveParametrization::ParameterAddress& target)
 	: line(line)
 {	
 	this->source_params.push_back(GlobFitCurveParametrization::ParameterAddress(line, 0));

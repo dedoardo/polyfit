@@ -55,4 +55,5 @@ PV_INLINE bool are_points_axis_aligned(const vec2& p0, const vec2& p1, const dou
 NAMESPACE_END(GeomRaster)
 NAMESPACE_END(polyfit)
 
+#include <polyvec/api.hpp>
 #include "raster.inl"

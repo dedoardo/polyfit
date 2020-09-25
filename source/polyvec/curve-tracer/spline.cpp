@@ -87,7 +87,7 @@ bool polyvec::CurveSequenceFitter::edge_has_important_tangent(int i_edge) const
 	if (std::abs(d.x()) < PF_EPS || std::abs(d.y()) < PF_EPS)
 		return true;
 
-	// 45°
+	// 45ï¿½
 	if (std::abs(std::abs(d.x()) - std::abs(d.y())) < PF_EPS)
 		return true;
 
@@ -566,7 +566,7 @@ void CurveSequenceFitter::solve(CurvePrimitiveSequence& seq, bool circular, int 
 	solve(seq, circular, primitiveFrom, primitiveTo, allow_parallel_handling);
 }
 
-std::vector<bool> polyvec::get_important_or_axis_aligned_edges(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
+std::vector<bool> get_important_or_axis_aligned_edges(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
 {
 	std::vector<bool> edge_is_important(polygon.cols(), false);
 	for (auto& r : regularity.important_edges())
@@ -583,7 +583,7 @@ std::vector<bool> polyvec::get_important_or_axis_aligned_edges(const Eigen::Matr
 	return edge_is_important;
 }
 
-std::vector<double> polyvec::find_edge_angles_from_parallel(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
+std::vector<double> find_edge_angles_from_parallel(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
 {
 	struct EntryData
 	{
@@ -639,7 +639,7 @@ std::vector<double> polyvec::find_edge_angles_from_parallel(const Eigen::Matrix2
 	return edge_angles;
 }
 
-void polyvec::addCurveSequenceToFitter
+void addCurveSequenceToFitter
 	(polyvec::CurveFitter& curve_fitter, CurvePrimitiveSequence& seq, bool circular, int primitiveFrom, int primitiveTo, int polygon_corners, 
 		const std::vector<bool>& is_edge_important_or_axisaligned, const std::vector<double>& edge_angles, bool allow_parallel_handling)
 {	
@@ -1045,8 +1045,8 @@ void CurveSequenceFitter::classify_evolutionary_simple(
         FittingAttempt fits[3];
 
         for (int j = 0; j < 3; ++j) {
-            bool fixFront = j & 1 == 1;
-            bool fixEnd = (j >> 1) & 1 == 1;
+            bool fixFront = (j & 1) == 1;
+            bool fixEnd = ((j >> 1) & 1) == 1;
 
             fits[j].primitive_seq = all_with_type(TangentFitType(type), true, fixFront, fixEnd);
 			fits[j].measure_sequence(polygon);

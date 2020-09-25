@@ -189,9 +189,9 @@ private:
 	};
 
 	// Returns if the edge has a tangent we want to preserve (i.e., axis-aligned of 45°)
-	bool polyvec::CurveSequenceFitter::edge_has_important_tangent(int i_edge) const;
+	bool edge_has_important_tangent(int i_edge) const;
 
-	//Prototypes for fits for each polygon corner. Each corner is represented by a number of individual curves.
+	//Prototypes for fits for each polygon corner. Each corner is represented by a number curves.
 	std::vector<std::vector<CornerFitPrototypePrimitive>> initial_fits[TANGENT_FIT_SAMPLES_COUNT];
 	
 	//Initializes the fits for the fitting types up to FIT - 1 for all corners.
