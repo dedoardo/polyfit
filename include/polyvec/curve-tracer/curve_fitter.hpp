@@ -9,7 +9,7 @@
 
 NAMESPACE_BEGIN(polyvec)
 
-class FitOptions;
+struct FitOptions;
 
 // Responsible for optimizing the parameters of a sequence of primitives.
 // Owns least squares objectives and wraps the solver invocation.

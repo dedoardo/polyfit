@@ -113,7 +113,7 @@ get_pixel_regions_from_bmp (
 
     // Read and process the image
     IO::Image image;
-    IO::read_image ( fname.c_str(), image );
+    IO::read_image ( fname.c_str(), image);
     ImageSegment::expand_and_cleanup ( image );
     ImageSegment::extract_closed_regions ( image, boundaries_d, colors_d );
 

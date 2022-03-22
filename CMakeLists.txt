@@ -4,6 +4,8 @@ project(polyvec)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/MP>)
 add_compile_options($<$<CXX_COMPILER_ID:MSVC>:/EHsc>)
 
+add_compile_options(-Wall -Wextra)
+
 # C++11
 set(CMAKE_CXX_STANDARD 11)
 
@@ -110,7 +112,7 @@ elseif((${CMAKE_CXX_COMPILER_ID} STREQUAL "GNU") OR
 			"/usr/local/include"
 	)
 
-	target_include_directories(polyvec-lib SYSTEM PUBLIC ${Cairo_INCLUDE_DIRS})
+	target_include_directories(polyvec-lib SYSTEM PUBLIC ${Cairo_INCLUDE_DIRS} /usr/include/cairo)
 	target_link_libraries(polyvec-lib PUBLIC ${Cairo_LIBRARIES})
 else()
 	message(FATAL_ERROR "Unrecognized compiler ${CMAKE_CXX_COMPILER_ID}")
@@ -139,7 +141,7 @@ endif()
 # more header-only dependencies
 target_include_directories(polyvec-lib SYSTEM PUBLIC
     # Used to list files in directory
-    "${CMAKE_SOURCE_DIR}/dependencies/dirent"
+    #"${CMAKE_SOURCE_DIR}/dependencies/dirent"
 
     # Used to read raster images
     "${CMAKE_SOURCE_DIR}/dependencies/stb"

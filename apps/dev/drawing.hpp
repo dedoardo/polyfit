@@ -310,7 +310,7 @@ namespace polyvec {
 
             //draw::text(primitives[i].curve->get_curve()->pos(.5), std::to_string(i), draw::font_pdf, Style::text());
             auto this_color = std::forward<TColorFunctor> ( color ) ( i, prim );
-            draw::curve ( primitives[i].curve->get_curve().get(), .2, this_color );
+            draw::curve ( primitives[i].curve->get_curve().get(), 1.2, this_color );
 
 			if (visualize_parametrization) {
 				draw::point(prim.curve->get_curve()->pos(0.25), 0.4, Style::fill(colors::red));

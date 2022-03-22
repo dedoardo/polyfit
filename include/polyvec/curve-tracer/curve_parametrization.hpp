@@ -27,6 +27,8 @@ namespace DofOptions
 
 class GlobFitCurveParametrization {
 public:
+
+
 	//we identify parameters by the curve pointer and the parameter id internal to that curve
 	struct ParameterAddress
 	{
@@ -55,6 +57,7 @@ public:
 		double fixedValuePropagated = std::numeric_limits<double>::quiet_NaN();
 	};
 
+	virtual ~GlobFitCurveParametrization() = default;
 	GlobFitCurveParametrization(std::shared_ptr<GlobFitCurve> curve);
 
 	virtual int n_params() const;
@@ -91,7 +94,7 @@ public:
 	void fix_parameter(int parameter, double value = std::numeric_limits<double>::quiet_NaN());
 	void copy_fixed_parameter_from(const GlobFitCurveParametrization& other);	
 
-	virtual void reduce_degrees_of_freedom(DofOptions::Type options)  { throw std::runtime_error("Tangent fixing must be implemented in a subclass"); }
+	virtual void reduce_degrees_of_freedom(DofOptions::Type /*options*/) { throw std::runtime_error("Tangent fixing must be implemented in a subclass"); }
 
 protected:
 	//Jacobian of the curve parameters w.r.t. the parameters of this parametrization.

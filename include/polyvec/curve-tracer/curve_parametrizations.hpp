@@ -28,16 +28,16 @@ public:
         const bool invert_front_coordinate_system = false,
         const bool invert_back_coordinate_system = false);
 
-	int n_params() const { return 8; }
+	int n_params() const override { return 8; }
 
-	void set_params(const Eigen::VectorXd& params);
-	Eigen::VectorXd get_params() const;
+	void set_params(const Eigen::VectorXd& params) override;
+	Eigen::VectorXd get_params() const override;
     void reverse()override;
 
-	GlobFitCurveParametrization* clone();
-	GlobFitCurveParametrization* create_for_curve(std::shared_ptr<GlobFitCurve> curve) const;	
+	GlobFitCurveParametrization* clone() override;
+	GlobFitCurveParametrization* create_for_curve(std::shared_ptr<GlobFitCurve> curve) const override;
 
-	void reduce_degrees_of_freedom(DofOptions::Type options);
+	void reduce_degrees_of_freedom(DofOptions::Type options) override;
 
 private:
 	struct FittingParams {
@@ -101,13 +101,13 @@ public:
         const bool invert_front_coordinate_system = false,
         const bool invert_back_coordinate_system = false);
 
-    int n_params() const { return 4; }
+    int n_params() const override { return 4; }
 
-    void set_params(const Eigen::VectorXd& params);
-    Eigen::VectorXd get_params() const;
+    void set_params(const Eigen::VectorXd& params) override;
+    Eigen::VectorXd get_params() const override;
 
     GlobFitCurveParametrization* clone();
-    GlobFitCurveParametrization* create_for_curve(std::shared_ptr<GlobFitCurve> curve) const;
+    GlobFitCurveParametrization* create_for_curve(std::shared_ptr<GlobFitCurve> curve) const override;
 
     //Sets a new custom coordinate system for the front point of the line. If rescale is set to true, the axis is re-scaled such that
     //its rejection from the original line is of unit-length.
@@ -123,7 +123,7 @@ public:
     //Replaces the endpoint of this line with the endpoint of the other line.
     void merge_with(GlobFitLineParametrization* other);
 
-    void reduce_degrees_of_freedom(DofOptions::Type options);
+    void reduce_degrees_of_freedom(DofOptions::Type options) override;
     void reverse()override;
 
     bool is_front_reversed() const { return front_system_inverted; }

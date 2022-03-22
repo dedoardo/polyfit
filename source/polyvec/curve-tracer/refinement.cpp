@@ -64,8 +64,8 @@ int collapse_asymmetric_constant_steps(
 				continue;
 			}
 
-			fprintf(stderr, "Collapse %d(%d) %d(%d)\n", i, vi, Circular(P, i + 1), vj);
-			fprintf(stderr, "dist %f %\n ", (pi - pj)(0), (pi - pj)(1));
+			//fprintf(stderr, "Collapse %d(%d) %d(%d)\n", i, vi, Circular(P, i + 1), vj);
+			//fprintf(stderr, "dist %f %\n ", (pi - pj)(0), (pi - pj)(1));
 
 			Index i_opp = -1, j_opp = -1;
 			int i_opp_sym_size = 0, j_opp_sym_size = 0;
@@ -73,7 +73,7 @@ int collapse_asymmetric_constant_steps(
 
 			// Looking for the symmetric small edge
 			for(auto& sym : RE.vertex_symmetries()) {			
-				printf("regularity: %d <-> %d size %d\n", sym.v0, sym.v1, sym.size);
+				//printf("regularity: %d <-> %d size %d\n", sym.v0, sym.v1, sym.size);
 
 				if (sym.v0 == i && sym.size > i_opp_sym_size) {
 					i_opp = sym.v1;

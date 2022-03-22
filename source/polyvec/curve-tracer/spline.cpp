@@ -566,7 +566,7 @@ void CurveSequenceFitter::solve(CurvePrimitiveSequence& seq, bool circular, int 
 	solve(seq, circular, primitiveFrom, primitiveTo, allow_parallel_handling);
 }
 
-std::vector<bool> polyvec::get_important_or_axis_aligned_edges(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
+std::vector<bool> get_important_or_axis_aligned_edges(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
 {
 	std::vector<bool> edge_is_important(polygon.cols(), false);
 	for (auto& r : regularity.important_edges())
@@ -583,7 +583,7 @@ std::vector<bool> polyvec::get_important_or_axis_aligned_edges(const Eigen::Matr
 	return edge_is_important;
 }
 
-std::vector<double> polyvec::find_edge_angles_from_parallel(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
+std::vector<double> find_edge_angles_from_parallel(const Eigen::Matrix2Xd& polygon, const polyfit::Regularity::RegularityInformation& regularity)
 {
 	struct EntryData
 	{
@@ -639,7 +639,7 @@ std::vector<double> polyvec::find_edge_angles_from_parallel(const Eigen::Matrix2
 	return edge_angles;
 }
 
-void polyvec::addCurveSequenceToFitter
+void addCurveSequenceToFitter
 	(polyvec::CurveFitter& curve_fitter, CurvePrimitiveSequence& seq, bool circular, int primitiveFrom, int primitiveTo, int polygon_corners, 
 		const std::vector<bool>& is_edge_important_or_axisaligned, const std::vector<double>& edge_angles, bool allow_parallel_handling)
 {	
@@ -881,10 +881,10 @@ CurveSequenceFitter::CornerSequence::CornerSequence ( int first_incl, int last_i
     : _first_incl ( first_incl ), _last_incl ( last_incl )
 { }
 
-const int CurveSequenceFitter::CornerSequence::first_incl() const {
+int CurveSequenceFitter::CornerSequence::first_incl() const {
     return _first_incl;
 }
-const int CurveSequenceFitter::CornerSequence::last_incl() const {
+int CurveSequenceFitter::CornerSequence::last_incl() const {
     return _last_incl;
 }
 
@@ -974,7 +974,7 @@ std::vector<CurveSequenceFitter::CornerSequence> CurveSequenceFitter::Evolutiona
         if ( !is_corner_certain ( prev % cornerBelief.size() ) && !is_corner_certain ( i % cornerBelief.size() ) ) {
             //we need to break here
             if ( currentSequenceStart != -1 ) {
-                connectedSequences.emplace_back ( currentSequenceStart, ( i - 1 ) % cornerBelief.size() );
+                connectedSequences.push_back ( CornerSequence(currentSequenceStart, ( i - 1 ) % cornerBelief.size()) );
             }
 
             currentSequenceStart = i;

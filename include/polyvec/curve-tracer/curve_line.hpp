@@ -44,7 +44,7 @@ namespace polyvec {
 		
 		GlobFitCurve* clone() const override;
 
-		geom::aabb get_bounding_box() const;
+		geom::aabb get_bounding_box() const override;
 
 		// Line functions
 		void set_points(const Eigen::Matrix2d& points);
@@ -56,7 +56,7 @@ namespace polyvec {
 		GlobFitCurve_Line(const Eigen::Matrix2d& points);
 		GlobFitCurve_Line(const Eigen::Vector2d& p0, const Eigen::Vector2d& p1);
 
-		std::pair<GlobFitCurve*, GlobFitCurve*> split(double t) const;
+		std::pair<GlobFitCurve*, GlobFitCurve*> split(double t) const override;
 
 	private:
 		static constexpr int _n_params = 4;

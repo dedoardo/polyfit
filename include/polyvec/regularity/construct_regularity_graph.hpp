@@ -39,7 +39,7 @@ struct Parallel {
 struct Continuation {
 	Continuation() = default;
 	Continuation(int v0_prev, int v0, int move_v0, int v1, int move_v1, int v1_next) :
-		v0_prev(v0_prev), v0(v0), v1(v1), v1_next(v1_next), move_v0(move_v0), move_v1(move_v1) { }
+		v0_prev(v0_prev), v0(v0), v1(v1), move_v0(move_v0), v1_next(v1_next), move_v1(move_v1) { }
 
 	// Corners
 	int polygon_0 = -1;

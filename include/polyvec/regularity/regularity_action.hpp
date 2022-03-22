@@ -12,6 +12,8 @@ NAMESPACE_BEGIN(PolygonTracer)
 class RegularityAction
 {
 public:
+	virtual ~RegularityAction() = default;
+
 	virtual std::vector<size_t> get_edges_to_delete(const mat2x& raster, const vecXi& polygon, const std::vector<BoundaryGraph::Edge>& E, bool circular) const = 0;
 	
     virtual bool can_introduce_degenerate_edges() const = 0;

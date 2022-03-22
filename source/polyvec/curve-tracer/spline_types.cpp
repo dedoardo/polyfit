@@ -5,6 +5,8 @@
 #include <polyvec/utils/directions.hpp>
 #include <polyvec/utils/curve_sampling.hpp>
 
+#include <iostream> // todo: remove
+
 #define TANGENT_SAMPLES_PER_UNIT_ARCLENGTH 8
 
 //Adds linearly interpolated tangent samples for the given Bezier curve to tangents/ts.
@@ -43,7 +45,9 @@ void polyvec::FittingInfo::add_tangent_samples(GlobFitCurveParametrization* curv
 	sparse_tangents.fit_tangents.push_back(endTangent);
 	sparse_tangents.fit_tangent_ts.push_back(1.0);
 
-	const int tangent_samples = std::ceil(sampling.total_length() * 2 * TANGENT_SAMPLES_PER_UNIT_ARCLENGTH);
+	std::cout << "total length " << sampling.total_length() << std::endl;
+	const int tangent_samples = (int)std::ceil(sampling.total_length() * 2 * TANGENT_SAMPLES_PER_UNIT_ARCLENGTH);
+	std::cout << "INIT tangent samples " << tangent_samples << std::endl;
 	const double arcLengthPerSample = sampling.total_length() / tangent_samples;
 	dense_tangents.fit_tangents.clear();
 	dense_tangents.fit_tangents.reserve(tangent_samples);

@@ -124,7 +124,7 @@ std::vector<FitClassifier::PolygonCornerInfo> FitClassifier::PolygonCornerInfo::
 		info.dist_next = read_key_value_pair(f, "dist next");
 		info.angle = read_key_value_pair(f, "angle");
 		info.raster_corner_size = read_key_value_pair(f, "corner size");
-		info.neighbors_with_different_convexity = read_key_value_pair(f, "convex diff");
+		info.neighbors_with_different_convexity = (int)read_key_value_pair(f, "convex diff");
 
 		result.push_back(info);
 	}
@@ -417,7 +417,7 @@ void FitClassifierRandomForest::train(
 
 	std::random_shuffle(sample_set.samples.begin(), sample_set.samples.end());
 
-	const size_t training_samples = sample_set.samples.size() * 0.5;
+	const size_t training_samples = sample_set.samples.size() / 2;
 	const size_t shape[] = { training_samples, feature_description.features.size() };
 	andres::Marray<double> features(shape, shape + 2);
 	andres::Marray<unsigned char> labels(shape, shape + 1);

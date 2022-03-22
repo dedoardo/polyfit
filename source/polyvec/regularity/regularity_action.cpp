@@ -79,7 +79,7 @@ void PolygonTracer::apply_regularities(
 
 		// In case of failure, restoring the older connectivty
 		if (fail) {
-            PF_VERBOSE_F("failed to apply regularity");
+            PF_VERBOSE_S("failed to apply regularity");
 			current = old;
 			E.insert(E.end(), E_rm.begin(), E_rm.end());
             PF_VERBOSE_F("restore older path and insert %d edges", E_rm.size());

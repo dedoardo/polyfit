@@ -62,8 +62,8 @@ public :
 
 		CornerSequence(int first_incl, int last_incl);
 
-		const int first_incl() const;
-		const int last_incl() const;
+		int first_incl() const;
+		int last_incl() const;
 
 		//TFunc: void(int)
 		template <typename TFunc>
@@ -189,7 +189,7 @@ private:
 	};
 
 	// Returns if the edge has a tangent we want to preserve (i.e., axis-aligned of 45°)
-	bool polyvec::CurveSequenceFitter::edge_has_important_tangent(int i_edge) const;
+	bool edge_has_important_tangent(int i_edge) const;
 
 	//Prototypes for fits for each polygon corner. Each corner is represented by a number of individual curves.
 	std::vector<std::vector<CornerFitPrototypePrimitive>> initial_fits[TANGENT_FIT_SAMPLES_COUNT];

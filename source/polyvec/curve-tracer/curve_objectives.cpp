@@ -392,6 +392,9 @@ namespace polyvec {
 
         case FORMULATION_VECTOR_DIFF:
             return 2;
+		default:
+			assert(false);
+			break;
         }
     }
 

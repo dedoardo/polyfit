@@ -96,8 +96,8 @@ int main(int argc, char* argv[]) {
         for (size_t i = 0; i < boundaries_by_area.size(); ++i) {
 
             const auto& boundary = tracer.boundaries()[boundaries_by_area[i]];
-            //draw_curve_primitives(boundary.spline().primitives, boundary.color());
-            draw_curve_primitives_closed(boundary.spline().primitives, boundary.color());
+            draw_curve_primitives(boundary.spline().primitives, PrimitiveTypeColorFunctor());
+            //draw_curve_primitives_closed(boundary.spline().primitives, boundary.color());
             PF_VERBOSE_F("Boundary color %f %f %f %f points %d", boundary.color()(0), boundary.color()(1), boundary.color()(2), boundary.color()(3), boundary.boundary_points().size());
         }
         pdf->draw(0, 0);

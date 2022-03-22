@@ -49,7 +49,7 @@ PV_INLINE vec2 distance_bounds_from_points_with_slack(
 
     // This happens when the raster region has 1-pixel wide diagonals
     if (v_src != v_dst && GeomRaster::are_overlapping(p_src, p_dst)) {
-        return vec2(FLT_MAX, FLT_MAX);
+        return vec2(std::numeric_limits<float>::max(), std::numeric_limits<float>::max());
     }
 
     // If the intersection between the normal and the line farther than this 

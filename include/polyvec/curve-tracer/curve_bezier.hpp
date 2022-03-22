@@ -14,8 +14,8 @@ class BezierCurve : public GlobFitCurve{
 public:
     BezierCurve() = default;
 
-	GlobFitCurveType get_type() const { return GLOBFIT_CURVE_BEZIER; }
-	int n_params() const { return 8; }
+	GlobFitCurveType get_type() const override { return GLOBFIT_CURVE_BEZIER; }
+	int n_params() const override { return 8; }
 
     Eigen::Vector2d pos ( const double t ) const override;
     Eigen::Vector2d dposdt ( const double t ) const override;
@@ -48,13 +48,13 @@ public:
     double length() const;
     Eigen::VectorXd dlengthdparams();
 
-	GlobFitCurve* clone() const { return new BezierCurve(*this); }
+	GlobFitCurve* clone() const override { return new BezierCurve(*this); }
 
-	geom::aabb get_bounding_box() const;
+	geom::aabb get_bounding_box() const override;
 
 	BezierCurve(const Eigen::Matrix2Xd& C);
 
-	std::pair<GlobFitCurve*, GlobFitCurve*> split(double t) const;
+	std::pair<GlobFitCurve*, GlobFitCurve*> split(double t) const override;
 
 private:
     constexpr static unsigned _n_tesselation = 50;    

@@ -43,12 +43,22 @@ if (1)
 			"${CMAKE_SOURCE_DIR}/dependencies"
             "${CMAKE_SOURCE_DIR}/dependencies/eigen"
             "${CMAKE_SOURCE_DIR}/dependencies/cairo"
-            "${CMAKE_SOURCE_DIR}/dependencies/dirent"
             "${CMAKE_SOURCE_DIR}/dependencies/stb"
 		)
 
+		if (WIN32)
+		target_include_directories(${FILE_EXE} SYSTEM PUBLIC
+            "${CMAKE_SOURCE_DIR}/dependencies/dirent"
+		)
+		endif()
+
 		target_link_libraries(${FILE_EXE} PUBLIC polyvec-lib)
-		target_link_libraries(${FILE_EXE} PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/cairo/x64/cairo.lib")
+		if (UNIX)
+			target_link_libraries(${FILE_EXE} PUBLIC cairo)
+		else()
+			target_link_libraries(${FILE_EXE} PUBLIC "${CMAKE_SOURCE_DIR}/dependencies/cairo/x64/cairo.lib")
+		endif()
+
 
 		set_target_properties(${FILE_EXE}
 			PROPERTIES
