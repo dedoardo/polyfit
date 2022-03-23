@@ -278,7 +278,8 @@ namespace polyvec {
 			auto& tangent = tangents[i];
 
 			Eigen::Vector2d dposdt = curve0.get_curve()->dposdt(t);
-			auto dposdt_dparams = curve0.dposdtdparams(t) + curve0.get_curve()->dposdtdt(t) * dt_dparams;
+			const Eigen::Matrix2Xd dposdt_dparams = curve0.dposdtdparams(t) + curve0.get_curve()->dposdtdt(t) * dt_dparams;
+			// auto dposdt_dparams = curve0.dposdtdparams(t) + curve0.get_curve()->dposdtdt(t) * dt_dparams;
 
 			// Using the cross product formulation
 			if (_use_cross_product_formulation) {
@@ -308,7 +309,8 @@ namespace polyvec {
 					const Eigen::Matrix2d dtang_ddposdt =
 						Eigen::Matrix2d::Identity() / dposdt_norm
 						- 1. / (dposdt_norm * dposdt_norm2) * dposdt * dposdt.transpose();
-					auto dtang_dparams = dtang_ddposdt * dposdt_dparams;
+					const Eigen::Matrix2Xd dtang_dparams = dtang_ddposdt * dposdt_dparams;
+					// auto dtang_dparams = dtang_ddposdt * dposdt_dparams;
 
 					const Eigen::Vector2d diff = tang - tangent;
 

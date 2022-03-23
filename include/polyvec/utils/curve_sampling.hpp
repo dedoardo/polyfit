@@ -20,11 +20,11 @@ public:
 		ddistances_dparams[0].setZero();
 
 		for (int i = 1; i <= n_samples; ++i) {
-			auto diff = curve.get_curve()->pos(i * h) - curve.get_curve()->pos((i - 1) * h);
+			const Eigen::Vector2d diff = curve.get_curve()->pos(i * h) - curve.get_curve()->pos((i - 1) * h);
 			double step = diff.norm();
 			distances[i] = distances[i - 1] + step;
 
-			auto ddiff_dparams = curve.get_curve()->dposdparams((i - 1) * h) - curve.get_curve()->dposdparams(i * h);
+			const Eigen::Matrix2Xd ddiff_dparams = curve.get_curve()->dposdparams((i - 1) * h) - curve.get_curve()->dposdparams(i * h);
 			ddistances_dparams[i] = ddistances_dparams[i - 1] + Eigen::RowVector2d(diff.x() / step, diff.y() / step) * ddiff_dparams;
 		}
 	}

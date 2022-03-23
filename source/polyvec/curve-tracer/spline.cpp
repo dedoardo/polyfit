@@ -81,7 +81,7 @@ Index poly_linidx(const Eigen::Matrix2Xd& poly, const Index idx) {
 
 bool polyvec::CurveSequenceFitter::edge_has_important_tangent(int i_edge) const
 {
-	auto d = CircularAt(polygon, i_edge + 1) - polygon.col(i_edge);
+	const Eigen::Vector2d d = CircularAt(polygon, i_edge + 1) - polygon.col(i_edge);
 
 	// axis-aligned
 	if (std::abs(d.x()) < PF_EPS || std::abs(d.y()) < PF_EPS)
@@ -576,7 +576,7 @@ std::vector<bool> get_important_or_axis_aligned_edges(const Eigen::Matrix2Xd& po
 	//also add axis-aligned edges
 	for (int i = 0; i < polygon.cols(); ++i)
 	{
-		auto d = CircularAt(polygon, i + 1) - polygon.col(i);
+		const Eigen::Vector2d d = CircularAt(polygon, i + 1) - polygon.col(i);
 		if (d.cwiseAbs().minCoeff() <= PF_EPS)
 			edge_is_important[i] = true;
 	}
