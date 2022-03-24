@@ -560,7 +560,9 @@ void GlobFitter::set_variables(const Eigen::VectorXd& params_in) { //
 			if (pInfo[i].variable_id != -1)
 				params(i) = params_in(pInfo[i].variable_id);
 			else if (!std::isnan(pInfo[i].fixedValuePropagated))
-				params(i) = pInfo[i].fixedValuePropagated;				
+				params(i) = pInfo[i].fixedValuePropagated;
+			else 
+				fprintf(stderr, "ERRORR!!!!\n");
 		}		
 		//at this point, the constrained parameters are not yet filled in
 		//set them anyway, so that the calculation of constraints can access them

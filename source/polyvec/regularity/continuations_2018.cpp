@@ -62,8 +62,8 @@ std::vector<polyfit::Regularity::Continuation> find_continuation_candidates_2018
 
         auto j = min_for_i;
 
-        const auto pi = B.col(V(i));
-        const auto pj = B.col(V(j));
+        const Vector2d pi = B.col(V(i));
+        const Vector2d pj = B.col(V(j));
 
         // Test1: Inscribed circle
         const auto c = .5 * (pi + pj);

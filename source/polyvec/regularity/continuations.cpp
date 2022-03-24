@@ -54,10 +54,10 @@ std::vector<int> get_vertex_move_candidates(
 		return result;
 
 	auto p = B.col(V(i));
-	auto prev_id = CircularAt(V, i - 1);
-	auto next_id = CircularAt(V, i + 1);
-	auto prev = B.col(prev_id);
-	auto next = B.col(next_id);
+	const int prev_id = CircularAt(V, i - 1);
+	const int next_id = CircularAt(V, i + 1);
+	const Eigen::Vector2d prev = B.col(prev_id);
+	const Eigen::Vector2d next = B.col(next_id);
 
 	bool is_x_axis_aligned = std::abs((p - prev).y()) < PF_EPS || std::abs((p - next).y()) < PF_EPS;
 	bool is_y_axis_aligned = std::abs((p - prev).x()) < PF_EPS || std::abs((p - next).x()) < PF_EPS;

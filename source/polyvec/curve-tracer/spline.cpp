@@ -87,7 +87,7 @@ bool polyvec::CurveSequenceFitter::edge_has_important_tangent(int i_edge) const
 	if (std::abs(d.x()) < PF_EPS || std::abs(d.y()) < PF_EPS)
 		return true;
 
-	// 45°
+	// 45
 	if (std::abs(std::abs(d.x()) - std::abs(d.y())) < PF_EPS)
 		return true;
 
@@ -625,8 +625,8 @@ std::vector<double> find_edge_angles_from_parallel(const Eigen::Matrix2Xd& polyg
 		if (uf[rep].merge_count == 0)
 			continue;
 
-		auto avg_dir = uf[rep].dir;
-		auto orig_dir = CircularAt(polygon, i + 1) - polygon.col(i);
+		Vector2d avg_dir = uf[rep].dir;
+		const Vector2d orig_dir = CircularAt(polygon, i + 1) - polygon.col(i);
 
 		// find the correct orientation
 		if (orig_dir.dot(avg_dir) < 0)
