@@ -318,7 +318,7 @@ bool PostProcessor::_relocate_short_edge(const int v_src, const int v_dst, const
     // Making sure that we are not breaking existing symmetries
 #if FANCY_SYMMETRIC_LOGIC
     bool would_break_symmetry = false;
-    for (auto& r : regularity.vertex_symmetries()) {
+    for (const polyfit::Regularity::Symmetry& r : regularity.vertex_symmetries()) {
         const int dist_to_src = CircularDist(P, v_dst_poly, r.v0);
         const int dist_from_dst = CircularDist(P, r.v1, v_src_poly);
         if (min(dist_to_src, dist_from_dst) >= 2) {
@@ -331,7 +331,7 @@ bool PostProcessor::_relocate_short_edge(const int v_src, const int v_dst, const
             const int v_prev_1 = PathUtils::opposite(P.size(), r.v0, r.v1);
 
             bool are_symmetric = false;
-            for (const auto s : regularity.vertex_symmetries(v_prev_0)) {
+            for (const polyfit::Regularity::Symmetry& s : regularity.vertex_symmetries(v_prev_0)) {
                 if ((s.v0 == v_prev_0 && s.v1 == v_prev_1) ||
                     (s.v1 == v_prev_0 && s.v0 == v_prev_1)) {
                     are_symmetric = true;

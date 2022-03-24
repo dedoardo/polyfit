@@ -145,7 +145,7 @@ std::vector<polyfit::Regularity::Continuation> find_continuation_candidates_2018
     }
 
     for (auto& continuation : continuations) {
-        reg.add(move(continuation));
+        reg.add(continuation);
     }
     continuations.clear();
     return continuations;

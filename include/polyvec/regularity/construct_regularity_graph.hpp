@@ -87,13 +87,13 @@ struct Continuation {
 };
 
 struct Symmetry {
-	int axis; // see Symmetry::Axis
-	int size; // Number of points spanned by the symmetric region
-	int region; // Index of the symmetric region
-	int v0;
-	int v1;
+	int axis = -1; // see Symmetry::Axis
+	int size = -1; // Number of points spanned by the symmetric region
+	int region = -1; // Index of the symmetric region
+	int v0 = -1;
+	int v1 = -1;
 
-	bool is_relaxed;
+	bool is_relaxed = false;
 
 	bool matches(const int v) const {
 		return v0 == v || v1 == v;
@@ -135,11 +135,11 @@ struct ImportantEdge {
 class RegularityInformation
 {
 public:
-	void add(Parallel&& p);
-	void add(Symmetry&& s);
-	void add(Continuation&& s);
+	void add(const Parallel& p);
+	void add(const Symmetry& s);
+	void add(const Continuation& s);
 	void add_important_edge(int v0);
-	void add_edge_symmetry(Symmetry&& s);
+	void add_edge_symmetry(const Symmetry& s);
 
 	const std::vector<Parallel>&		parallels() const { return _parallels; }
 	const std::vector<Continuation>&	continuations() const { return _continuations; }

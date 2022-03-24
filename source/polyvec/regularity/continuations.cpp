@@ -420,7 +420,7 @@ void Regularity::pick_continuations(
 			V(r.v1) = target_v1;
 		}
 
-		regularity.add(std::move(r));
+		regularity.add(r);
 	}
 
 	auto force_edge = [&](int v0, int v1)

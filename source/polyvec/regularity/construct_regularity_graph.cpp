@@ -242,16 +242,16 @@ void find_all_parallel_edges(
 		if (is_flat_corner[vi1])
 			vi1 = Circular(V, vi1 + 1);
 
-		auto p0 = B.col(V(vi0));
-		auto p1 = B.col(V(vi1));
-		auto d = p1 - p0;
+		const Vector2d p0 = B.col(V(vi0));
+		const Vector2d p1 = B.col(V(vi1));
+		const Vector2d d = p1 - p0;
 
 		// skip tiny edges
 		if (d.squaredNorm() < 2. + PF_EPS)
 			continue;
 
 		// calculate the angle of the edge
-		auto angle = std::atan2(d.y(), d.x());
+		const double angle = std::atan2(d.y(), d.x());
 		angular_grid.add_entry(i, angle);	
 	}
 
@@ -271,7 +271,7 @@ void find_all_parallel_edges(
 		const vec2 di = (pi1 - pi0);
 		auto length_i = di.norm();
 
-		auto normal = polyvec::util::normal_dir(di) * (is_ccw ? 1.0 : -1.0);
+		const Vector2d normal = polyvec::util::normal_dir(di) * (is_ccw ? 1.0 : -1.0);
 		
 		// find all edges that fulfill the angle criterion for parallelity
 		angular_grid.for_each_entry_in_angle_range(angle_i + M_PI - PV_REGULARITY_PARALLEL_MAX_DEVIATION_ANGLE, angle_i + M_PI + PV_REGULARITY_PARALLEL_MAX_DEVIATION_ANGLE,
@@ -364,7 +364,7 @@ void find_all_parallel_edges(
 			// find the primary direction of the two edges (the axis with maximum extent)
 			auto get_primary_direction = [](const vec2& d) {
 				if (std::abs(std::abs(d.x()) - std::abs(d.y())) < PF_EPS)
-					return -1; //45°
+					return -1; //45ï¿½
 				else if (std::abs(d.x()) > std::abs(d.y()))
 					return 0;
 				else
@@ -409,7 +409,7 @@ void find_all_parallel_edges(
 			auto minmaxi = count_max_step(V(vi0), V(vi1));
 			auto minmaxj = count_max_step(V(vj0), V(vj1));
 
-			// The primary directions can be different if we are at a 45° line (1-1-1-1-1-....)
+			// The primary directions can be different if we are at a 45ï¿½ line (1-1-1-1-1-....)
 			if (primary_i != primary_j && (minmaxi.cwiseAbs().maxCoeff() > 1 || minmaxj.cwiseAbs().maxCoeff() > 1))
 				return; //edges lie in different octants
 
@@ -432,7 +432,7 @@ void find_all_parallel_edges(
 			// Checking which of the pair of corners are aligned
 			if (r.connected_00_11)
 			{
-				// Connecting line must be (almost) axis-aligned or at a 45° angle
+				// Connecting line must be (almost) axis-aligned or at a 45ï¿½ angle
 				if (di0j1.cwiseAbs().minCoeff() > 1. + PF_EPS && std::abs(std::abs(di0j1.x()) - std::abs(di0j1.y())) > 1.0 + PF_EPS) {
 					return;
 				}
@@ -440,7 +440,7 @@ void find_all_parallel_edges(
 
 			if (r.connected_01_10)
 			{
-				// Connecting line must be (almost) axis-aligned or at a 45° angle
+				// Connecting line must be (almost) axis-aligned or at a 45ï¿½ angle
 				if (di1j0.cwiseAbs().minCoeff() > 1. + PF_EPS && std::abs(std::abs(di1j0.x()) - std::abs(di1j0.y())) > 1.0 + PF_EPS) {
 					return;
 				}
@@ -449,7 +449,7 @@ void find_all_parallel_edges(
 			// sets r.aligned_00_11 and r.aligned_01_10
 			test_and_set_opposite_points_alignment(B, C, V, r);
 
-			reg.add(std::move(r));
+			reg.add(r);
 		});
 	});
 }
@@ -471,20 +471,20 @@ void find_all_symmetric_points(
 		boundary_to_polygon[V(i)] = i;
 
 	for (size_t k = 0; k < raster_symmetries.size(); ++k) {
-		const auto& s = raster_symmetries[k];
+		const polyfit::Symmetry::SubPath& s = raster_symmetries[k];
 
-		auto size = CircularDist(B, s.v01, s.v00);
+		const Eigen::Index size = CircularDist(B, s.v01, s.v00);
 
 		// walk along the two subregions in opposite directions
-		auto bi = s.v01;
-		auto bj = s.v11;
+		Eigen::Index bi = s.v01;
+		Eigen::Index bj = s.v11;
 
 		int last_vi = -1;
 		int last_vj = -1;
 
 		while (true) {
-			auto vi = boundary_to_polygon[bi];
-			auto vj = boundary_to_polygon[bj];
+			const int vi = boundary_to_polygon[bi];
+			const int vj = boundary_to_polygon[bj];
 
 			if (vi != -1 && vj != -1)
 			{
@@ -504,14 +504,14 @@ void find_all_symmetric_points(
 				const bool same_angle = abs(angle_i - angle_j) < same_angle_threshold;
 
 				e.is_relaxed = !same_angle;	
-				reg.add(move(e));
+				reg.add(e);
 
 				// check edge symmetry
 				if (last_vi != -1 && last_vj != -1) {
 					Symmetry edge_symmetry = e;
 					edge_symmetry.v0 = last_vi;
 					edge_symmetry.v1 = vj;
-					reg.add_edge_symmetry(std::move(edge_symmetry));
+					reg.add_edge_symmetry(edge_symmetry);
 				}
 
 				last_vi = vi;
@@ -529,7 +529,7 @@ void find_all_symmetric_points(
 	}
 
     for (size_t i = 0; i < raster_symmetries_local.size(); ++i) {
-        const auto& s = raster_symmetries_local[i];
+        const polyfit::Symmetry::SubPath& s = raster_symmetries_local[i];
         PF_VERBOSE_F("Local symmetry %d %d %d %d", s.v01, s.v00, s.v10, s.v11);
         const int poly_v0 = boundary_to_polygon[s.v00];
         const int poly_v1 = boundary_to_polygon[s.v10];
@@ -544,7 +544,8 @@ void find_all_symmetric_points(
         sym.axis = s.axis;
         sym.size = CircularDist(B, s.v01, s.v11);
         sym.region = i;
-        reg.add(move(sym));
+		sym.is_relaxed = false;
+        reg.add(sym);
     }
 }
 
@@ -656,22 +657,22 @@ void RegularityInformation::update (
 	polygon_vertices = V.size();
 }
 
-void RegularityInformation::add(Parallel && p)
+void RegularityInformation::add(const Parallel& p)
 {
-	_parallels.push_back(std::move(p));
+	_parallels.push_back(p);
 }
 
-void RegularityInformation::add(Symmetry && s)
+void RegularityInformation::add(const Symmetry& s)
 {
-	_vertex_symmetries.push_back(std::move(s));
+	_vertex_symmetries.push_back(s);
 	per_vertex_symmetries[s.v0].push_back(_vertex_symmetries.size() - 1);
 	if(s.v0 != s.v1)
 		per_vertex_symmetries[s.v1].push_back(_vertex_symmetries.size() - 1);
 }
 
-void RegularityInformation::add(Continuation && s)
+void RegularityInformation::add(const Continuation& s)
 {
-	_continuations.push_back(std::move(s));
+	_continuations.push_back(s);
 
 	if (s.v0 == Circular<size_t>(polygon_vertices, s.v0_prev + 1))
 	{
@@ -706,12 +707,12 @@ void RegularityInformation::add_important_edge(int v0)
 {
 	ImportantEdge e;
 	e.v0 = v0;
-	_important_edges.push_back(std::move(e));
+	_important_edges.push_back(e);
 }
 
-void RegularityInformation::add_edge_symmetry(Symmetry && s)
+void RegularityInformation::add_edge_symmetry(const Symmetry & s)
 {
-	_edge_symmetries.push_back(std::move(s));
+	_edge_symmetries.push_back(s);
 }
 
 nse::util::IteratorRange<RegularityInformation::SymmetryIterator> RegularityInformation::vertex_symmetries(Vertex v) const

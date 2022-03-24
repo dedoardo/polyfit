@@ -121,7 +121,7 @@ typename ResultType::TResult polyvec::get_regularity_actions(
 #endif
 	}
 
-	for (auto& r : regularity.vertex_symmetries()) {
+	for (const polyfit::Regularity::Symmetry& r : regularity.vertex_symmetries()) {
 		if (r.is_relaxed)
 			continue;
 		// make the corresponding vertices equal
